@@ -2,6 +2,7 @@ import pandas as pd
 import os
 from urllib import request
 
+# make sure of change the file 
 df = pd.read_table('gbn-fonts-3_part_0(final).tsv')
 
 # make a url list
