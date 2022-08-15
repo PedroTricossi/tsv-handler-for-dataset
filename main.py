@@ -3,7 +3,7 @@ import os
 import wget
 from urllib import request
 
-df = pd.read_table('gbn-fonts-3_part_0')
+df = pd.read_table('gbn-fonts-3_part_0(final).tsv')
 #df = pd.read_table('teste.tsv')
 
 # make a url list
@@ -13,7 +13,7 @@ urls = list_to_string.split()
 
 # get the current directory
 cwd = os.getcwd()
-classes = ['Antiqua', 'Fraktur', 'Kanzlei', 'Italic', 'Script', 'Textur']
+classes = ['Antiqua', 'Fraktur', 'Kanzlei', 'Italic', 'Script', 'Textura']
 for classe in classes:
     dir = cwd+'/'+classe
     # make dir to separate classes 
@@ -34,10 +34,13 @@ for column in tuple_features:
     seg_id_url = seg_id[0]+'_'+seg_id[1]
     # find the respective url
     url = [url for url in urls if seg_id_url in url][0]
-    # build the url
-    build_url = url.replace('region', str(column[7])).replace('rotation', str(column[8]))
-    build_url_list.append(build_url)
-print(build_url_list)
-# download the images
-#for url in build_url_list:
-#    response = request.urlretrieve(url, str(column[3])+'/'+str(column[5])+'.png')
+    file = os.getcwd().join(str(column[3])+'/'+str(column[5]))
+    if not os.path.isfile(file):
+        # build the url
+        build_url = url.replace('region', str(column[7])).replace('rotation', str(column[8]))
+        # download the image
+        try:
+            response = request.urlretrieve(build_url, str(column[3])+'/'+str(column[5])+'.png')
+        except Exception as inst:
+            print(inst)
+            print('A imagem {column[5]} não pôde ser baixada.\n')
