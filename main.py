@@ -1,10 +1,8 @@
 import pandas as pd
 import os
-import wget
 from urllib import request
 
 df = pd.read_table('gbn-fonts-3_part_0(final).tsv')
-#df = pd.read_table('teste.tsv')
 
 # make a url list
 column_to_list = list(df['text_equiv'])
