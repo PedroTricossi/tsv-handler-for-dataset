@@ -3,7 +3,8 @@ import os
 import wget
 from urllib import request
 
-df = pd.read_table('teste.tsv')
+df = pd.read_table('gbn-fonts-3_part_0')
+#df = pd.read_table('teste.tsv')
 
 # make a url list
 column_to_list = list(df['text_equiv'])
@@ -15,6 +16,7 @@ cwd = os.getcwd()
 classes = ['Antiqua', 'Fraktur', 'Kanzlei', 'Italic', 'Script', 'Textur']
 for classe in classes:
     dir = cwd+'/'+classe
+    # make dir to separate classes 
     if not os.path.exists(dir):
         os.mkdir(dir)
 
@@ -25,16 +27,17 @@ for row in df.itertuples():
     if not "# " in row[1]:
         tuple_features.append(row)   
 
+build_url_list = []
 for column in tuple_features:
     # get the segment_id
-    list_seg_id = column[5].split('_', 2)
-    seg_id = list_seg_id[0]+'_'+list_seg_id[1]
+    seg_id = column[5].split('_', 2)
+    seg_id_url = seg_id[0]+'_'+seg_id[1]
     # find the respective url
-    url = str([url for url in urls if seg_id in url])
+    url = [url for url in urls if seg_id_url in url][0]
     # build the url
-    url = url.replace('region', str(column[7])).replace('rotation', str(column[8]))
-    print(type(url))
-    #column[3] corresponde ao dir
-    #response = wget.download(url, str(column[3])+'/'+seg_id)
-    #response = request.urlretrieve(url, str(column[3])+'/'+seg_id)
-    print(url)
+    build_url = url.replace('region', str(column[7])).replace('rotation', str(column[8]))
+    build_url_list.append(build_url)
+print(build_url_list)
+# download the images
+#for url in build_url_list:
+#    response = request.urlretrieve(url, str(column[3])+'/'+str(column[5])+'.png')
