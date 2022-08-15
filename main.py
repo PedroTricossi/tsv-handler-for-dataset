@@ -1,10 +1,13 @@
 import pandas as pd
 import os
+import wget
+from urllib import request
 
 df = pd.read_table('teste.tsv')
 
+# make a url list
 column_to_list = list(df['text_equiv'])
-list_to_string = ('\n'.join(str(comment) for comment in column_to_list if '#' in comment)).replace("# ", "")
+list_to_string = ('\n'.join(str(comment) for comment in column_to_list if '#' in comment)).replace("# ", "").replace('size', 'full').replace('quality.format', 'bitonal.png')
 urls = list_to_string.split()
 
 # get the current directory
@@ -15,29 +18,23 @@ for classe in classes:
     if not os.path.exists(dir):
         os.mkdir(dir)
 
-#for comment in column_to_list:
-#    if comment[0] == '#':
-#        urls.append(comment)
-#    urls.replace(' ', '')
-#    urls.replace('#', '')
-print('\n\n\n\n')
-
-#print(test2)
-#print("\n\n\n")
-#.replace(" ", "")
-#for comment in test2:
-#    print(comment)
-#print(test2)
-
+# save the tuples 
 tuple_features = []
 for row in df.itertuples():
     # if the text_equiv isn't a comment
     if not "# " in row[1]:
         tuple_features.append(row)   
 
-print(tuple_features)
-for item in tuple_features:
-    # print the language
-    print(item[3])
-#print(urls)
-# print(df)
+for column in tuple_features:
+    # get the segment_id
+    list_seg_id = column[5].split('_', 2)
+    seg_id = list_seg_id[0]+'_'+list_seg_id[1]
+    # find the respective url
+    url = str([url for url in urls if seg_id in url])
+    # build the url
+    url = url.replace('region', str(column[7])).replace('rotation', str(column[8]))
+    print(type(url))
+    #column[3] corresponde ao dir
+    #response = wget.download(url, str(column[3])+'/'+seg_id)
+    #response = request.urlretrieve(url, str(column[3])+'/'+seg_id)
+    print(url)
